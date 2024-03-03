@@ -62,7 +62,7 @@ import Navbar from '../components/Navbar.vue'
 
         methods: {
             getPatients(){
-                fetch('http://localhost:8080/patients')
+                fetch('http://localhost:8082/patients')
                 .then(res => res.json())
                 .then(data => {
                     this.patients = data
@@ -70,7 +70,7 @@ import Navbar from '../components/Navbar.vue'
                 })
             },
             deletePatient(id){
-                fetch(`http://localhost:8080/patient/${id}`, {
+                fetch(`http://localhost:8082/patient/${id}`, {
                     method: 'DELETE'
                 })
                 .then(data => {

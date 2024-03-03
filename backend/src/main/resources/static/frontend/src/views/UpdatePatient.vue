@@ -76,7 +76,7 @@ export default {
 
     methods: {
         getPatients(){
-            fetch(`http://localhost:8080/patient/${this.$route.params.id}`)
+            fetch(`http://localhost:8082/patient/${this.$route.params.id}`)
             .then(res => res.json())
             .then(data => {
                 this.patient = data;
@@ -85,7 +85,7 @@ export default {
 
         },
         updatePatient(){
-            fetch(`http://localhost:8080/patient`, {
+            fetch(`http://localhost:8082/patient`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
