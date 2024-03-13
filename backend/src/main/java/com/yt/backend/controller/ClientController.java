@@ -53,9 +53,23 @@ public class ClientController {
     }
 
     // updatePatient
-    @PutMapping("/patient")
-    public Patient updatePatient(@RequestBody Patient patient) {
-        return patientService.updatePatient(patient);
+
+    @PutMapping("/patient/{id}")
+    public Patient updatePatient(
+            @PathVariable("id") long id,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("patient") String patientJson
+    ) {
+        try {
+            Patient patient = new ObjectMapper().readValue(patientJson, Patient.class);
+            patient.setId(id);
+            patient.setPicture(file.getBytes());
+            patientService.updatePatient(patient);
+            return patient;
+        } catch (IOException e) {
+            // Handle exception appropriately
+            return null;
+        }
     }
 
     // deletePatientById
