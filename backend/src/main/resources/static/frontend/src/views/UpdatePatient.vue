@@ -29,19 +29,19 @@
                       <input id="pNo" type="text"  name="pNo" class="form-control" placeholder="Phone Number" required v-model="patient.pNo" >
                     </div>
                   </div>             
-                
-               
+
+
                 <div class="row">
                   <div class="col-md-12 form-group">
                     <input class="btn btn-primary w-100" type="submit" value="Submit">
                   </div>
                 </div>
-      
+
                 <div>
-                  
+
                 </div>
               </form>
-        
+
             </div>
           </div>
 

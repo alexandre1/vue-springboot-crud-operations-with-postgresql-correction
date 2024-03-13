@@ -2,6 +2,7 @@ package com.yt.backend.model;
 
 import jakarta.persistence.*;
 
+
 @Entity
 @Table(name="patient_table")
 public class Patient {
@@ -16,7 +17,15 @@ public class Patient {
 
     private String pNo;
 
+    private  String username;
+
+    private String password;
+
     private String gender;
+
+	@Lob
+	@Basic(fetch = FetchType.LAZY)
+	private byte  [] picture;
 
     public long getId() {
         return id;
@@ -57,4 +66,28 @@ public class Patient {
     public void setGender(String gender) {
         this.gender = gender;
     }
+
+    public String getUsername() {
+        return username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+	
+    public byte[] getPicture() {
+		return picture;
+	}
+
+	public void setPicture(byte[] picture) {
+		this.picture = picture;
+	}
+
 }

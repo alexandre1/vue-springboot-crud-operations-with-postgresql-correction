@@ -18,7 +18,12 @@ const router = createRouter({
       path: '/edit/:id',
       name: 'edit',
       component: () => import('../views/UpdatePatient.vue')
-    }
+    },
+    {
+          path: '/login',
+          name: 'login',
+          component: () => import('../views/Login.vue')
+        }
   ]
 })
 
