@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vue/compat": "^3.4.21",
     "axios": "^1.6.7",
     "bootstrap": "^5.2.3",
     "vue": "^3.2.47",

@@ -23,7 +23,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="patient in patients" :key="patient.id">
+                            <tr v-for="patient in paginatedPatients" :key="patient.id">
                                 <th scope="row">{{ patient.id }}</th>
                                 <td>
                                     <img :src="patient.picture" alt="Profile Image" style="max-width: 100px;">
@@ -40,7 +40,9 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
+                    <!-- Pagination component -->
+                        <Pagination :current-page="currentPage" :total-pages="totalPages" @update:current-page="handlePageChange" />
+                    </div>
             </div>
         </div>
 
@@ -49,53 +51,81 @@
 
 <script>
 import Navbar from '../components/Navbar.vue';
+import Pagination from '../components/PaginationView.vue';
 import axios from 'axios';
+
 
 export default {
     name: 'ViewPatients',
     components: {
-        Navbar
+        Navbar,
+        Pagination
     },
     data() {
         return {
-            patients: []
+            patients: [],
+            currentPage: 1,
+            pageSize: 1
         };
     },
-
+    computed: {
+        totalPages() {
+            return Math.ceil(this.patients.length / this.pageSize);
+        },
+        paginatedPatients() {
+          const startIndex = (this.currentPage - 1) * this.pageSize;
+          const endIndex = startIndex + this.pageSize;
+          return this.patients.slice(startIndex, endIndex);
+        }
+    },
     beforeMount() {
         this.getPatients();
     },
 
     methods: {
-getPatients() {
-        fetch('http://localhost:8082/patients')
-            .then(res => res.json())
-            .then(data => {
-                // Iterate through each patient and fetch the picture separately
-                const promises = data.map(patient => {
-                    return fetch(`http://localhost:8082/patients/${patient.id}/picture`)
-                        .then(res => res.blob())
-                        .then(blob => {
-                            // Convert blob to data URL
-                            return URL.createObjectURL(blob);
-                        })
-                        .then(url => {
-                            // Update patient object with picture URL
-                            patient.picture = url; // <-- Assign the URL to picture property
-                        });
-                });
 
-                // Wait for all promises to resolve
-                Promise.all(promises)
-                    .then(() => {
-                        // Set patients data
-                        this.patients = data;
+    getPatients(page, size) {
+        axios.get('http://localhost:8082/entities', {
+            params: {
+                page: page, // Send the current page number
+                size: size // Send the page size
+            }
+        })
+        .then(response => {
+            // Extract patients data from the response
+            const data = response.data.content;
+
+            // Iterate through each patient and fetch the picture separately
+            const promises = data.map(patient => {
+                return fetch(`http://localhost:8082/patients/${patient.id}/picture`)
+                    .then(res => res.blob())
+                    .then(blob => {
+                        // Convert blob to data URL
+                        return URL.createObjectURL(blob);
+                    })
+                    .then(url => {
+                        // Update patient object with picture URL
+                        patient.picture = url; // <-- Assign the URL to picture property
                     });
-            })
-            .catch(error => {
-                console.error('Error fetching patients:', error);
             });
+
+            // Wait for all promises to resolve
+            Promise.all(promises)
+                .then(() => {
+                    // Set patients data after all promises are resolved
+                    this.patients = data;
+                });
+        })
+        .catch(error => {
+            console.error('Error fetching patients:', error);
+        });
     },
+
+     handlePageChange(newPage) {
+            this.currentPage = newPage;
+            // Call getPatients method again with the updated page number
+            this.getPatients();
+          },
          deletePatient(id) {
             fetch(`http://localhost:8082/patient/${id}`, {
                 method: 'DELETE'
