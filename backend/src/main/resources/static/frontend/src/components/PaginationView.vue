@@ -3,10 +3,10 @@
   <nav aria-label="Page navigation">
     <ul class="pagination">
       <li class="page-item" :class="{ disabled: currentPage === 1 }">
-        <button class="btn btn-primary" @click="previousPage">Previous</button>
+        <button class="btn btn-primary" @click="previousPage">Previous</button>&nbsp;
       </li>
       <li class="page-item" v-for="pageNumber in totalPages" :key="pageNumber" :class="{ active: pageNumber === currentPage }">
-        <button class="btn btn-primary" @click="goToPage(pageNumber)">{{ pageNumber }}</button>
+        <button class="btn btn-primary" @click="goToPage(pageNumber)">{{ pageNumber }}</button>&nbsp;
       </li>
       <li class="page-item" :class="{ disabled: currentPage === totalPages }">
         &nbsp;<button class="btn btn-primary" @click="nextPage">Next</button>

@@ -27,6 +27,12 @@
                     <input class="btn btn-primary w-100" type="submit" value="Submit">
                   </div>
                 </div>
+                <div class="row">
+                  <div class="col-md-12 form-group">
+                    <a class="nav-link" href="/forgetPassword">Forget password</a>
+                  </div>
+                </div>
+
                 <div>
 
                 </div>

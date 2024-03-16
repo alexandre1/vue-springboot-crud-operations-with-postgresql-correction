@@ -1,7 +1,6 @@
 <template>
     <main>
         <Navbar />
-
         <!-- Table-->
         <div class="container">
             <div class="row">
@@ -41,7 +40,7 @@
                         </tbody>
                     </table>
                     <!-- Pagination component -->
-                        <Pagination :current-page="currentPage" :total-pages="totalPages" @update:current-page="handlePageChange" />
+                        <Pagination :current-page="currentPage" :total-pages="totalPages" @update:current-page="handlePageChange" />&nbsp;
                     </div>
             </div>
         </div>
@@ -54,7 +53,6 @@ import Navbar from '../components/Navbar.vue';
 import Pagination from '../components/PaginationView.vue';
 import axios from 'axios';
 
-
 export default {
     name: 'ViewPatients',
     components: {
@@ -65,7 +63,7 @@ export default {
         return {
             patients: [],
             currentPage: 1,
-            pageSize: 1
+            pageSize: 2
         };
     },
     computed: {
