@@ -3,10 +3,8 @@
     <Navbar />
     <div class="my-5">
       <div class="mx-auto w-25 " style="max-width:100%;">
-        <h2 class="text-center mb-3">Retrieve Passwords</h2>
+        <h2 class="text-center mb-3">Retrieve Password</h2>
         <form @submit.prevent="forgetPassword">
-          <!--name-->
-          <!--Email-->
           <div class="row">
             <div class="col-md-12 form-group mb-3">
               <label for="email" class="form-label">Email</label>
@@ -15,7 +13,7 @@
           </div>
           <div class="row">
             <div class="col-md-12 form-group">
-              <input class="btn btn-primary w-100" type="submit" value="Submit">
+              <button class="btn btn-primary w-100" @click="forgetPassword(patient.email)">Submit</button>
             </div>
           </div>
 
@@ -46,6 +44,23 @@ export default {
         email: ''
       }
    }
-  }};
+  },
+  methods: {
+    forgetPassword() {
+      axios.put(`http://localhost:8082/forgetPassword/${this.patient.email}`, this.patient)
+          .then(response => {
+            if (response.status === 200) {
+              console.log('Password successfully retrieved');
+              this.$router.push("/");
+            } else {
+              console.error('Failed to retrieve patient');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+    }
+  }
+};
 
 </script>

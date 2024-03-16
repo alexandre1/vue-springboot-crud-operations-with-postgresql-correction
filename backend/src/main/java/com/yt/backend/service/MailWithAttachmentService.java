@@ -25,7 +25,7 @@ public class MailWithAttachmentService {
     private String host = "";
     private String port = "";
 
-    MailWithAttachmentService() {
+   public  MailWithAttachmentService() {
     }
 
     MailWithAttachmentService(String username, String password, String host, String port) {
@@ -84,13 +84,6 @@ public class MailWithAttachmentService {
 
 
 
-    public void sendRegistrationMail (Session session, String email, Patient p, String url) throws AddressException, MessagingException, IOException {
-        System.out.println(" Sending "  + email);
-
-        Message message = createMailRegistration(session,email,p, url);
-        Transport.send(message);
-    }
-
     public void sendPassword (Session session, String email, Patient p) throws AddressException, MessagingException, IOException {
         System.out.println(" Sending "  + email);
 
@@ -98,16 +91,12 @@ public class MailWithAttachmentService {
         Transport.send(message);
     }
 
-    public void sendMail(Session session,String fileName,String textField, String sizeSelectUE, String sizeSelectUs ,String  sizeCm, String email) throws MessagingException, IOException {
-        System.out.println(" Sending "  + fileName);
-        Message message = createMail(session,fileName,textField, sizeSelectUE, sizeSelectUs ,  sizeCm, email);
-        Transport.send(message);
-    }
+
 
     public Message createMailLostPassword(Session session, String email,Patient p) throws AddressException, MessagingException, IOException {
-        String aHref = "<a href=" + "\"" + "http://localhost:8084/confirmRegistration?encryptedEmail="+ getPassword(email) + "\"" + ">" + "Veuillez confirmer votre inscription à Choose !"+ "</a>";
+        String aHref = "<a href=" + "\"" + "http://localhost:8084/confirmRegistration?encryptedEmail="+ p.getPassword() + "\"" + ">" + "Veuillez confirmer votre inscription à Choose !"+ "</a>";
         String html = "Bonjour " + p.getUsername()  +
-                ", <br/> Votre mot de passe pour l'application et le site Choose ! est le suivant " +getDecryptedPassword( p.getPassword());
+                ", <br/> Votre mot de passe pour l'application et le site Choose ! est le suivant " +p.getPassword();
 
         MimeMessage message = new MimeMessage(session);
         message.setFrom(new InternetAddress("alexjaquet@gmail.com"));

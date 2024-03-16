@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
@@ -14,6 +15,10 @@ public class PatientServiceImpl implements PatientService {
     // repository
     @Autowired
     private PatientRepository patientRepository;
+
+    @Autowired
+    private PatientEmailRepository patientEmailRepository;
+
     @Autowired
     private PageablePatientRepository pageablePatientepository;
 
@@ -24,9 +29,13 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public Patient getPatientById(long id) {
+
         return patientRepository.findById(id).get();
     }
-
+    @Transactional(readOnly = true)
+    public Patient getPatientByEmail(String email) {
+        return patientRepository.findByEmail(email);
+    }
     @Override
     public List<Patient> getPatients() {
         return (List<Patient>) patientRepository.findAll();
@@ -45,4 +54,5 @@ public class PatientServiceImpl implements PatientService {
     public Page<Patient> getAllPatientsPaginated(Pageable pageable) {
         return pageablePatientepository.findAll(pageable);
     }
+
 }

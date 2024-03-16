@@ -3,6 +3,8 @@ package com.yt.backend.controller;
 
 import com.yt.backend.model.Patient;
 import com.yt.backend.service.PatientService;
+import com.yt.backend.service.MailWithAttachmentService;
+import com.yt.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +18,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ClientController {
@@ -35,6 +50,7 @@ public class ClientController {
             @RequestParam("patient") String patientJson
     ) {
         try {
+            final String secretKey = "aslkdfjlkj)/d89723897bc";
             Patient patient = new ObjectMapper().readValue(patientJson, Patient.class);
             patient.setPicture(file.getBytes());
             patientService.addPatient(patient);
@@ -61,11 +77,12 @@ public class ClientController {
     @CrossOrigin
     @GetMapping("/entities")
     public Page<Patient> getEntities(@RequestParam(defaultValue = "0") int page,
-                                    @RequestParam(defaultValue = "20") int size, Pageable pageable) {
+                                     @RequestParam(defaultValue = "20") int size, Pageable pageable) {
         Pageable pageableQuery = PageRequest.of(page, size);
         System.out.println("size : " + size);
         return patientService.getAllPatientsPaginated(pageableQuery);
     }
+
     // updatePatient
     @CrossOrigin
     @PutMapping("/patient/{id}")
@@ -113,4 +130,27 @@ public class ClientController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @CrossOrigin
+    @PutMapping("/forgetPassword/{email}")
+    public Patient forgetPassword(
+            @PathVariable("email") String email
+    ) {
+        MailWithAttachmentService mail = new MailWithAttachmentService();
+        Patient patientRetrieved = patientService.getPatientByEmail(email);
+        System.out.println(patientRetrieved.getPassword());
+        if (patientRetrieved != null) {
+            System.out.println("Patient Retrieved - ID: " + patientRetrieved.getId());
+            try {
+                mail.sendPassword(mail.getSession(), email, patientRetrieved);
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
+            } catch (MessagingException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+        return null;
+    }
+
+
 }
